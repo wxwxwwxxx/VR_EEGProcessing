@@ -110,3 +110,29 @@ def readbdfdata(filename, pathname):
     eeg['nchan'] = nchan
     return eeg
 
+def readdatalabel(pathname):#temp_implement
+    filename = ['data.bdf', 'evt.bdf']
+    mi26_channel_list = ["FCz","FC1","FC2","FC3","FC4","FC5","FC6","FT7","FT8","Cz","C1","C2","C3","C4","C5","C6","T7","T8","CP1","CP2","CP3","CP4","CP5","CP6","TP7","TP8"]
+    all_data = []
+    all_label = []
+    for p in pathname:
+        eeg = readbdfdata(filename, [p])
+        edata = eeg["data"]
+        anno = eeg["events"]
+        all_ch_names = eeg["ch_names"]
+        mi26_channel_index = [all_ch_names.index(i) for i in mi26_channel_list]
+        sub_data = []
+        sub_label = []
+        for i in anno:
+            time_marker = i[0]
+            label = i[2]-1
+            sub_data.append(edata[mi26_channel_index,time_marker+500:time_marker+3500])
+            sub_label.append(label)
+        all_data.append(sub_data)
+        all_label.append(sub_label)
+    return all_data, all_label
+    # all_data = [preprocess_all(i) for i in all_data]
+    # # all_data = [extract_feature(i,sf,z_score=False) for i in all_data]
+    # all_data = np.stack(all_data, axis=0)
+    # all_data = all_data.reshape(all_data.shape[0],-1)
+    # all_label = np.array(all_label)

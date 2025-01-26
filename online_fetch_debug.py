@@ -12,6 +12,8 @@
 from neuracle_lib.dataServer import DataServerThread
 import time
 import numpy as np
+import os
+save_dir = r"D:\Projects\VR_Online_Data_debug"
 def main():
     ## 配置设备
     neuracle = dict(device_name='Neuracle', hostname='127.0.0.1', port=8712,
@@ -53,9 +55,10 @@ def main():
                 thread_data_server.ResetDataLenCount()
                 triggerChan = data[-1,:]
                 idx = np.argwhere(triggerChan!=0)
-                print(idx)
-                print(triggerChan[idx])
-                print(data.shape)
+                timestamp = time.strftime("%Y%m%d_%H%M%S")
+                filename = f"{timestamp}.npy"
+                np.save(os.path.join(save_dir,filename), data)
+                print(f"{filename} saved.")
                 time.sleep(5)
             # if N > 30:
             #     flagstop = True

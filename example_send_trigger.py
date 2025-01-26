@@ -14,8 +14,8 @@ import time
 
 
 if __name__ == '__main__':
-    isTriggerIn = True
-    isTriggerBox = False
+    isTriggerIn = False
+    isTriggerBox = True
 
     if isTriggerIn:
         ## example send triggers through TriggerIn
@@ -32,8 +32,12 @@ if __name__ == '__main__':
     if isTriggerBox:
         ## example send triggers by TriggerBox
         triggerbox = TriggerBox("COM3")
-        for i in range(1,10):
+        # for i in range(1,10):
+        i = 1
+        while True:
             print('send trigger: {0}'.format(i))
             triggerbox.output_event_data(i)
-            time.sleep(1)
+            time.sleep(3)
+            i+=1
+            # i = 2 if i==1 else 1
         triggerbox.closeSerial()
