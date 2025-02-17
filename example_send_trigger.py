@@ -37,7 +37,7 @@ if __name__ == '__main__':
         while True:
             print('send trigger: {0}'.format(i))
             triggerbox.output_event_data(i)
-            time.sleep(3)
+            time.sleep(1)
             i+=1
-            # i = 2 if i==1 else 1
+            i = 1 if i==40 else i
         triggerbox.closeSerial()

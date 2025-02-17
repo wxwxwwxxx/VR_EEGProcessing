@@ -12,6 +12,7 @@
 from neuracle_lib.dataServer import DataServerThread
 import time
 import numpy as np
+import matplotlib.pyplot as plt
 def main():
     ## 配置设备
     neuracle = dict(device_name='Neuracle', hostname='127.0.0.1', port=8712,
@@ -28,37 +29,50 @@ def main():
     ### 选着设备型号,默认Neuracle
     target_device = device[0]
     ## 初始化 DataServerThread 线程
-    time_buffer = 10 # second
+    time_buffer = 3 # second
     thread_data_server = DataServerThread(device=target_device['device_name'], n_chan=target_device['n_chan'],
                                           srate=target_device['srate'], t_buffer=time_buffer)
-    ### 建立TCP/IP连接
-    notconnect = thread_data_server.connect(hostname=target_device['hostname'], port=target_device['port'])
-    if notconnect:
-        raise TypeError("Can't connect recorder, Please open the hostport ")
-    else:
-        # 启动线程
-        thread_data_server.Daemon = True
-        thread_data_server.start()
-        print('Data server connected')
+
+
     '''
     在线数据获取演示：每隔一秒钟，获取数据（数据长度 = time_buffer）
     '''
     N, flagstop = 0, False
+    # last_n_update = -1
     try:
         while not flagstop:  # get data in one second step
             nUpdate = thread_data_server.GetDataLenCount()
-            if nUpdate > (1 * target_device['srate'] - 1):
+            # if nUpdate != last_n_update:
+            #     print(nUpdate)
+            #     last_n_update = nUpdate
+            d = thread_data_server.GetBufferData()
+            print(d[0,-1])
+            if nUpdate > (time_buffer * target_device['srate'] - 1):
                 N += 1
                 data = thread_data_server.GetBufferData()
                 thread_data_server.ResetDataLenCount()
-                triggerChan = data[-1,:]
-                idx = np.argwhere(triggerChan!=0)
-                print(idx)
-                print(triggerChan[idx])
-                print(data.shape)
-                time.sleep(5)
-            # if N > 30:
-            #     flagstop = True
+                # triggerChan = data[-1,:]
+                # idx = np.argwhere(triggerChan!=0)
+
+                # 生成横轴数据
+                x = np.arange(3000)
+
+                # 创建折线图
+                plt.figure(figsize=(10, 5))
+
+                plt.plot(x, data[0]/100000.0, label=f'Vector {0}')
+                plt.plot(x, data[2]/100000.0, label=f'Vector {2}')
+                plt.plot(x, data[26], label=f'Vector {26} (TRG)')
+                # 添加标签和图例
+                plt.xlabel('X-axis (3000 points)')
+                plt.ylabel('Values')
+                plt.title('Selected Vectors from Array')
+                plt.legend()
+                plt.grid()
+
+                # 显示图像
+                plt.show()
+
     except:
         pass
     ## 结束线程

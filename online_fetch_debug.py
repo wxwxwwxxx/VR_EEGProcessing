@@ -20,9 +20,9 @@ def main():
                     srate=1000, chanlocs=['Pz', 'POz', 'PO3', 'PO4', 'PO5', 'PO6', 'Oz', 'O1', 'O2', 'TRG'], n_chan=27)
 
     dsi = dict(device_name='DSI-24', hostname='127.0.0.1', port=8844,
-               srate=300,
-               chanlocs=['P3', 'C3', 'F3', 'Fz', 'F4', 'C4', 'P4', 'Cz', 'CM', 'A1', 'Fp1', 'Fp2', 'T3', 'T5', 'O1',
-                         'O2', 'X3', 'X2', 'F7', 'F8', 'X1', 'A2', 'T6', 'T4', 'TRG'], n_chan=25)
+               srate=300, chanlocs=['P3', 'C3', 'F3', 'Fz', 'F4', 'C4', 'P4', 'Cz', 'CM', 'A1', 'Fp1', 'Fp2',
+                                    'T3', 'T5', 'O1', 'O2', 'X3', 'X2', 'F7', 'F8', 'X1', 'A2', 'T6', 'T4', 'TRG'], n_chan=25)
+
     neuroscan = dict(device_name='Neuroscan', hostname='127.0.0.1', port=4000,
                      srate=1000,
                      chanlocs=['Pz', 'POz', 'PO3', 'PO4', 'PO5', 'PO6', 'Oz', 'O1', 'O2', 'TRG'] + ['TRG'], n_chan=65)
@@ -60,8 +60,7 @@ def main():
                 np.save(os.path.join(save_dir,filename), data)
                 print(f"{filename} saved.")
                 time.sleep(5)
-            # if N > 30:
-            #     flagstop = True
+
     except:
         pass
     ## 结束线程

@@ -13,6 +13,19 @@ import serial.tools.list_ports
 import time
 from ctypes import *
 
+# from future.moves.urllib.request import to_bytes
+# import serial.serialutil
+def to_bytes(seq):
+    """convert a sequence to a bytes type"""
+    if isinstance(seq, bytes):
+        return seq
+    elif isinstance(seq, bytearray):
+        return bytes(seq)
+    elif isinstance(seq, memoryview):
+        return seq.tobytes()
+    else:
+        # handle list of integers and bytes (one or more items) for Python 2 and 3
+        return bytes(bytearray(seq))
 '''
     structure and union
 '''
@@ -299,6 +312,7 @@ class TriggerBox(object):
         cmd.frame.deviceID = self._deviceID
         cmd.frame.functionID = self.functionIDOutputEventData
         cmd.frame.payload = 1
+        print(to_bytes(cmd))
         self.send(cmd)
         data = self.read(cmd.frame.functionID)
         isSucceed = data[0] == self.functionIDOutputEventData
@@ -319,6 +333,7 @@ class TriggerBox(object):
         return False
 
     def send(self, data):
+        print(to_bytes(data))
         self._device_comport_handle.flushInput()
         self._device_comport_handle.write(data)
         # time.sleep(0.5)
