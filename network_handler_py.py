@@ -36,11 +36,12 @@ def run_eeg_result(thread_data_server,model):
         if nUpdate > (3 * thread_data_server.srate - 1):
             data = thread_data_server.GetBufferData()
             break
-    data = data[0:26]/100000.0 # no TRG channel
+    data = data[0:26]/1000000.0 # no TRG channel
     data = preprocess_all(data)
     data = data.reshape([-1])[None,...]
     ret = model.predict(data)[0]
     return ret
+
 HOST = "127.0.0.1"
 PORT = 12345
 print(f"准备连接Unity服务端,IP:{HOST},PORT:{PORT}")
@@ -51,7 +52,7 @@ print("已连接到 Unity")
 print(f"准备连接EEG服务端")
 dataserver = eeg_init()
 print("已连接到EEG服务端")
-model = joblib.load("model\jm_model_250117_23.pkl")
+model = joblib.load("model\zdn_model_250221.pkl")
 ret = None
 try:
     while True:

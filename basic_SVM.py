@@ -102,40 +102,27 @@ if __name__ == '__main__':
     #     all_data.append(edata[mi26_channel_index,time_marker+500:time_marker+3500])
     #     all_label.append(label)
     all_data,all_label = readdatalabel(
-        [r'C:\Program Files (x86)\Neuracle\Neusen W\Data\2025\01\17日下午第二次_全部有效',
-         r"C:\Program Files (x86)\Neuracle\Neusen W\Data\2025\01\17日下午第三次_全部有效",
-         r"C:\Program Files (x86)\Neuracle\Neusen W\Data\2025\01\17日下午第四次_全部有效"])
+        [r'C:\Program Files (x86)\Neuracle\Neusen W\Data\2025\02\成品\ZDN0221下午第一次',
+         r"C:\Program Files (x86)\Neuracle\Neusen W\Data\2025\02\成品\ZDN0221下午第二次",
+         r"C:\Program Files (x86)\Neuracle\Neusen W\Data\2025\02\成品\ZDN0221下午第三次"])
     all_data_np,all_label_np = [],[]
     for d,l in zip(all_data,all_label):
         d,l = preprocess_for_data_label(d,l)
         all_data_np.append(d)
         all_label_np.append(l)
 
-    # param_grid = {
-    #     'C': [0.1, 1, 10, 100],
-    #     'kernel': ['linear', 'rbf'],
-    #     'gamma': [0.001, 0.01, 0.1, 1, 10]
-    # }
-    # 划分训练集和测试集
-    X_train, y_train = np.concatenate(all_data_np[0:2]),np.concatenate(all_label_np[0:2])
-    # X_train, y_train = all_data_np[0],all_label_np[0]
-    X_test, y_test = all_data_np[2],all_label_np[2]
-    # print(X_train.shape,y_train.shape,X_test.shape,y_test.shape)
-    # X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size=0.3, random_state=42)
-    # 创建 SVM 模型
-    model = svm.SVC(kernel='rbf',C=1)
-    # grid = svm.SVC()
-    # # 执行网格搜索
-    # grid_search = GridSearchCV(grid, param_grid, cv=10, scoring='accuracy')
 
-    # grid_search.fit(X_train, y_train)
-    # print("最佳参数:", grid_search.best_params_)
-    # print("最佳得分:", grid_search.best_score_)
-    # model = grid_search.best_estimator_
+    # 划分训练集和测试集
+    X_train, y_train = np.concatenate(all_data_np[0:3]),np.concatenate(all_label_np[0:3])
+    X_test, y_test = all_data_np[2],all_label_np[2]
+    # 创建 SVM 模型
+    model = svm.SVC(kernel='rbf')
+
+    # # 执行网格搜索
     # 测试模型
     model.fit(X_train, y_train)
     # 保存模型
-    joblib.dump(model, 'model/jm_model_250117_23.pkl')
+    joblib.dump(model, 'model/zdn_model_250221.pkl')
     y_train_pred = model.predict(X_train)
     # 输出结果
     accuracy_train = accuracy_score(y_train, y_train_pred)
