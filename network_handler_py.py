@@ -67,7 +67,6 @@ try:
         if received_data.decode("utf-8") == "go":
             print("Go！")
             ret=run_eeg_result(dataserver,model)# 0 for left,1 for right
-        print(ret)
         if ret==0:
             client_socket.sendall("l".encode("utf-8"))
         elif ret==1:
