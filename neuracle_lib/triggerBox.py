@@ -312,7 +312,7 @@ class TriggerBox(object):
         cmd.frame.deviceID = self._deviceID
         cmd.frame.functionID = self.functionIDOutputEventData
         cmd.frame.payload = 1
-        print(to_bytes(cmd))
+        # print(to_bytes(cmd))
         self.send(cmd)
         data = self.read(cmd.frame.functionID)
         isSucceed = data[0] == self.functionIDOutputEventData
@@ -333,7 +333,7 @@ class TriggerBox(object):
         return False
 
     def send(self, data):
-        print(to_bytes(data))
+        # print(to_bytes(data))
         self._device_comport_handle.flushInput()
         self._device_comport_handle.write(data)
         # time.sleep(0.5)
