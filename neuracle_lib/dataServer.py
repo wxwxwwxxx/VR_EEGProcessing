@@ -66,9 +66,9 @@ class DataServerThread(Thread,):
             except:
                 reconnecttime += 1
                 print('connection failed, retrying for %d times' % reconnecttime)
-                time.sleep(1)
-                if reconnecttime > 2:
-                    break
+                time.sleep(3)
+                # if reconnecttime > 2:
+                #     break
         self.shutdown_flag = Event()
         self.shutdown_flag.set()
         self.sock.setblocking(True)
